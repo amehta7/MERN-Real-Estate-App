@@ -1,0 +1,25 @@
+{
+  "name": "mern_realestate_app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon server/index.js",
+    "start": "node server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amehta7/MERN-Real-Estate-App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amehta7/MERN-Real-Estate-App/issues"
+  },
+  "homepage": "https://github.com/amehta7/MERN-Real-Estate-App#readme",
+  "dependencies": {
+    "express": "^4.18.3"
+  }
+}
