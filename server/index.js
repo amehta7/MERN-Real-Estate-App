@@ -3,6 +3,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import userRouter from './routes/user.js'
 import authRouter from './routes/auth.js'
+import { errorMiddleware } from './middleware/error.js'
 
 dotenv.config()
 
@@ -21,6 +22,8 @@ app.get('/', (req, res) => {
 
 app.use('/api/user', userRouter)
 app.use('/api/auth', authRouter)
+
+app.use(errorMiddleware)
 
 app.listen(3000, () => {
   console.log('Server is running on port 3000!')
