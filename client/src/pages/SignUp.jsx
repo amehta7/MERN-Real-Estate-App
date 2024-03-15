@@ -85,13 +85,14 @@ const SignUp = () => {
           {isLoading ? 'Loading...' : 'Sign up'}
         </button>
       </form>
-      {error && <p className='text-red-500 mt-3'>{error}</p>}
+
       <div className='flex flex-row gap-2 mt-5'>
         <p>Have an account?</p>
         <Link to='/sign-in'>
           <span className='text-blue-800'>Sign In</span>
         </Link>
       </div>
+      {error && <p className='text-red-500 mt-3'>{error}</p>}
     </div>
   )
 }
