@@ -4,12 +4,14 @@ import mongoose from 'mongoose'
 import userRouter from './routes/user.js'
 import authRouter from './routes/auth.js'
 import { errorMiddleware } from './middleware/error.js'
+import cookieParser from 'cookie-parser'
 
 dotenv.config()
 
 const app = express()
 
 app.use(express.json())
+app.use(cookieParser())
 
 mongoose
   .connect(process.env.MONGO_URI)

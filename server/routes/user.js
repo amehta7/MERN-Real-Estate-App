@@ -1,12 +1,9 @@
 import express from 'express'
-import { signin } from '../controllers/user.js'
+import { updateUser } from '../controllers/user.js'
+import verifyToken from '../middleware/verifyToken.js'
 
 const router = express.Router()
 
-router.get('/signin', (req, res) => {
-  res.send('Sign-in route')
-})
-
-router.get('/signout', signin)
+router.post('/update/:id', verifyToken, updateUser)
 
 export default router
