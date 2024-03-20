@@ -4,16 +4,20 @@ import {
   updateUserFailure,
   updateUserStart,
   updateUserSuccess,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure,
 } from '../features/user/userSlice'
 
 const Profile = () => {
   const { currentUser, loading, error } = useSelector((state) => state.user)
 
-  const [fromData, setFormData] = useState({})
+  const [formData, setFormData] = useState({})
+  const [successMsg, setSuccessMsg] = useState(false)
 
   const dispatch = useDispatch()
 
-  //console.log(fromData)
+  //console.log(formData)
 
   const handleChange = (e) => {
     setFormData((prev) => {
@@ -31,9 +35,9 @@ const Profile = () => {
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
         method: 'POST',
         headers: {
-          'Contente-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(FormData),
+        body: JSON.stringify(formData),
       })
 
       const data = await res.json()
@@ -45,8 +49,28 @@ const Profile = () => {
       }
 
       dispatch(updateUserSuccess(data))
+      setSuccessMsg(true)
     } catch (error) {
       dispatch(updateUserFailure(error.message))
+    }
+  }
+
+  const deleteHandler = async () => {
+    try {
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: 'DELETE',
+      })
+
+      const data = await res.json()
+      //console.log(data)
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message))
+        return
+      }
+
+      dispatch(deleteUserSuccess(data))
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message))
     }
   }
 
@@ -94,9 +118,16 @@ const Profile = () => {
         </button>
       </form>
       <div className='flex justify-between mt-5'>
-        <span className='text-red-700 cursor-pointer'>Delete Account</span>
+        <span className='text-red-700 cursor-pointer' onClick={deleteHandler}>
+          Delete Account
+        </span>
         <span className='text-red-700 cursor-pointer'>Sign Out</span>
       </div>
+      {successMsg && (
+        <p className='text-green-700 text-center mt-3'>
+          User is updated successfully!
+        </p>
+      )}
       {error && <p className='text-red-500 mt-3'>{error}</p>}
     </div>
   )
