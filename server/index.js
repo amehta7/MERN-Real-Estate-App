@@ -3,6 +3,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import userRouter from './routes/user.js'
 import authRouter from './routes/auth.js'
+import listingRouter from './routes/listing.js'
 import { errorMiddleware } from './middleware/error.js'
 import cookieParser from 'cookie-parser'
 
@@ -24,6 +25,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/user', userRouter)
 app.use('/api/auth', authRouter)
+app.use('/api/listing', listingRouter)
 
 app.use(errorMiddleware)
 
