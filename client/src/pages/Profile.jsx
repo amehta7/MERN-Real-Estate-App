@@ -20,6 +20,7 @@ const Profile = () => {
   const [successMsg, setSuccessMsg] = useState(false)
   const [showListingError, setShowListingError] = useState(false)
   const [listingData, setListingData] = useState([])
+  const [deleteListingError, setDeleteListingError] = useState(false)
 
   const dispatch = useDispatch()
 
@@ -112,6 +113,27 @@ const Profile = () => {
       setListingData(data)
     } catch (error) {
       setShowListingError(true)
+    }
+  }
+
+  const deleteListingHandler = async (listingId) => {
+    try {
+      setDeleteListingError(false)
+      const res = await fetch(`/api/listing/delete/${listingId}`, {
+        method: 'DELETE',
+      })
+      const data = await res.json()
+
+      if (data.success === false) {
+        setDeleteListingError(true)
+        return
+      }
+
+      setListingData((prevListingData) =>
+        prevListingData.filter((listing) => listing._id !== listingId)
+      )
+    } catch (error) {
+      setDeleteListingError(true)
     }
   }
 
@@ -209,7 +231,12 @@ const Profile = () => {
               </Link>
 
               <div className='flex flex-col item-center'>
-                <button className='text-red-700 uppercase'>Delete</button>
+                <button
+                  className='text-red-700 uppercase'
+                  onClick={() => deleteListingHandler(l._id)}
+                >
+                  Delete
+                </button>
                 <Link to={`/update-listing/${l._id}`}>
                   <button className='text-green-700 uppercase'>Edit</button>
                 </Link>
