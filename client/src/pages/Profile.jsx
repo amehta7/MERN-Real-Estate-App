@@ -18,6 +18,8 @@ const Profile = () => {
 
   const [formData, setFormData] = useState({})
   const [successMsg, setSuccessMsg] = useState(false)
+  const [showListingError, setShowListingError] = useState(false)
+  const [listingData, setListingData] = useState([])
 
   const dispatch = useDispatch()
 
@@ -95,6 +97,24 @@ const Profile = () => {
     }
   }
 
+  const handleShowListings = async () => {
+    try {
+      setShowListingError(false)
+
+      const res = await fetch(`/api/user/listings/${currentUser._id}`)
+      const data = await res.json()
+
+      if (data.success === false) {
+        setShowListingError(true)
+        return
+      }
+
+      setListingData(data)
+    } catch (error) {
+      setShowListingError(true)
+    }
+  }
+
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
@@ -155,6 +175,49 @@ const Profile = () => {
         </p>
       )}
       {error && <p className='text-red-500 mt-3'>{error}</p>}
+
+      <button className='text-green-700 w-full' onClick={handleShowListings}>
+        Show Listings
+      </button>
+
+      {showListingError && (
+        <p className='text-red-500 mt-3'>Error in showing listings...</p>
+      )}
+
+      {listingData && listingData.length > 0 && (
+        <div className='flex flex-col gap-4'>
+          <h1 className='text-center mt-7 text-2xl font-semibold'>
+            Your Listings
+          </h1>
+          {listingData.map((l) => (
+            <div
+              className='border rounded-lg p-3 flex justify-between items-center gap-4'
+              key={l._id}
+            >
+              <Link to={`/listing/${l._id}`}>
+                <img
+                  src={l.imageUrls[0]}
+                  alt='Listing Image'
+                  className='h-16 w-16 object-contain'
+                />
+              </Link>
+              <Link
+                to={`/listing/${l._id}`}
+                className='text-slate-700 font-semibold  hover:underline truncate flex-1'
+              >
+                <p>{l.name}</p>
+              </Link>
+
+              <div className='flex flex-col item-center'>
+                <button className='text-red-700 uppercase'>Delete</button>
+                <Link to={`/update-listing/${l._id}`}>
+                  <button className='text-green-700 uppercase'>Edit</button>
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
