@@ -245,6 +245,11 @@ const Profile = () => {
           ))}
         </div>
       )}
+      {deleteListingError && (
+        <p className='text-red-500 mt-3 text-center'>
+          Error in deleting listing...
+        </p>
+      )}
     </div>
   )
 }
