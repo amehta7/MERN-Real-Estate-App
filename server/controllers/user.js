@@ -61,3 +61,19 @@ export const getUserListings = async (req, res, next) => {
     next(error)
   }
 }
+
+export const getUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id)
+
+    if (!user) {
+      return next(errorHandler(404, 'There is no user with this id!'))
+    }
+
+    const { password, ...otherInfo } = user._doc
+
+    res.status(200).json(otherInfo)
+  } catch (error) {
+    next(error)
+  }
+}
