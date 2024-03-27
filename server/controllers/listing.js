@@ -94,7 +94,7 @@ export const searchListing = async (req, res, next) => {
     //type
     let type = req.query.type
     if (type === undefined || type === 'all') {
-      type = { $in: ['sale', 'rent'] }
+      type = { $in: ['sell', 'rent'] }
     }
 
     //searchTerm - like search with name
@@ -117,7 +117,7 @@ export const searchListing = async (req, res, next) => {
       .limit(limit)
       .skip(startIndex)
 
-    console.log(listings)
+    //console.log(listings)
     res.status(200).json(listings)
   } catch (error) {
     next(error)
