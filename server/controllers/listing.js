@@ -117,6 +117,7 @@ export const searchListing = async (req, res, next) => {
       .limit(limit)
       .skip(startIndex)
 
+    console.log(listings)
     res.status(200).json(listings)
   } catch (error) {
     next(error)
