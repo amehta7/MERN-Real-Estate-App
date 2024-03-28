@@ -14,6 +14,7 @@ const SearchListing = () => {
   })
   const [loading, setLoading] = useState(false)
   const [listings, setListings] = useState([])
+  const [showMoreBtn, setShowMoreBtn] = useState(false)
 
   const navigate = useNavigate()
 
@@ -51,11 +52,17 @@ const SearchListing = () => {
     const fetchListings = async () => {
       try {
         setLoading(true)
-
+        setShowMoreBtn(false)
         const searchQuery = urlParams.toString()
 
         const res = await fetch(`/api/listing/search?${searchQuery}`)
         const data = await res.json()
+
+        if (data.length > 8) {
+          setShowMoreBtn(true)
+        } else {
+          setShowMoreBtn(false)
+        }
 
         setListings(data)
         setLoading(false)
@@ -135,6 +142,23 @@ const SearchListing = () => {
     const searchQuery = urlParams.toString()
 
     navigate(`/search?${searchQuery}`)
+  }
+
+  const showMoreClickHandler = async () => {
+    const noOfListings = listings.length
+    const startIndex = noOfListings
+    const urlParams = new URLSearchParams(location.search)
+    urlParams.set('startIndex', startIndex)
+
+    const searchQuery = urlParams.toString()
+
+    const res = await fetch(`/api/listing/search?${searchQuery}`)
+    const data = await res.json()
+
+    if (data.length < 9) {
+      setShowMoreBtn(false)
+    }
+    setListings([...listings, ...data])
   }
 
   return (
@@ -262,6 +286,15 @@ const SearchListing = () => {
           {!loading &&
             listings.length > 0 &&
             listings.map((l) => <ListingCard key={l._id} listing={l} />)}
+
+          {showMoreBtn && (
+            <button
+              className='text-green-700 hover:underline p-7 text-center w-full'
+              onClick={showMoreClickHandler}
+            >
+              Show More
+            </button>
+          )}
         </div>
       </div>
     </div>
